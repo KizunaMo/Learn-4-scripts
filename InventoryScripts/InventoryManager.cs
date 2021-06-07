@@ -9,9 +9,11 @@ public class InventoryManager : MonoBehaviour
 
     public Inventory frogBag;
     public GameObject slotGrid;//包包格子
-    public Slot slotPrefab;//該格子的prefab
+    //public Slot slotPrefab;//該格子的prefab
+    public GameObject emptySlot;
     public Text itemInformation;
 
+    public List<GameObject> slots = new List<GameObject>();
 
     private void Awake()//singleton用awake,如果有參考到別的class都用awake,awake執行於start之前。
     {
@@ -32,14 +34,14 @@ public class InventoryManager : MonoBehaviour
         instance.itemInformation.text = itemDescription;//預設為空白的text內容，更新成itemDescription
     }
 
-    public static void CreatNewItem(Item item)
-    {
-        Slot newItem = Instantiate(instance.slotPrefab, instance.slotGrid.transform.position, Quaternion.identity);//instantiate要臨時生成一個Slot這個calss類的的物件,生成的位置，生成時的角度
-        newItem.gameObject.transform.SetParent(instance.slotGrid.transform);//設定這個生成的物件位置要放在哪，設定為放在父類的slotGrid底下
-        newItem.slotItem = item;//在slot的class內有slotitem項目要設定,slot的Class內的soltitem覆值給CreatNewItem的class的item
-        newItem.slotImage.sprite = item.itemImage;//在slot的class內有slotimage項目要設定
-        newItem.slotNumber.text = item.itemHeld.ToString();//在slot的class內有slotnumber項目要設定
-    }
+    //public static void CreatNewItem(Item item)
+    //{
+    //    Slot newItem = Instantiate(instance.slotPrefab, instance.slotGrid.transform.position, Quaternion.identity);//instantiate要臨時生成一個Slot這個calss類的的物件,生成的位置，生成時的角度
+    //    newItem.gameObject.transform.SetParent(instance.slotGrid.transform);//設定這個生成的物件位置要放在哪，設定為放在父類的slotGrid底下
+    //    newItem.slotItem = item;//在slot的class內有slotitem項目要設定,slot的Class內的soltitem覆值給CreatNewItem的class的item
+    //    newItem.slotImage.sprite = item.itemImage;//在slot的class內有slotimage項目要設定
+    //    newItem.slotNumber.text = item.itemHeld.ToString();//在slot的class內有slotnumber項目要設定
+    //}
 
     public static void RefreshItem()
     {
@@ -50,11 +52,15 @@ public class InventoryManager : MonoBehaviour
                 break;
             }
             Destroy(instance.slotGrid.transform.GetChild(i).gameObject);
+            instance.slots.Clear();
         }
 
         for (int i = 0; i < instance.frogBag.frogItemList.Count; i++)
         {
-            CreatNewItem(instance.frogBag.frogItemList[i]);
+            //CreatNewItem(instance.frogBag.frogItemList[i]);
+            instance.slots.Add(Instantiate(instance.emptySlot));//在列表當中添加emptySlot空格物件
+            instance.slots[i].transform.SetParent(instance.slotGrid.transform);//把物件放在一起slots 跟 slotgrids
+            instance.slots[i].GetComponent<Slot>().SetupSlot(instance.frogBag.frogItemList[i]);
         }
     }
 }

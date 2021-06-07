@@ -19,8 +19,16 @@ public class ItemOnWorld : MonoBehaviour
     {
         if (!playerInvetory.frogItemList.Contains(WhatIsThisItem))//如果unity public的包包底下的LIST清單裡面不包含WhatIsThisItem(設定的Item物件);
         {
-            playerInvetory.frogItemList.Add(WhatIsThisItem);//新增該物件到該包包的List底下
-            //InventoryManager.CreatNewItem(WhatIsThisItem);//在IventoryManager的class底下新增一個物件，為當前物件unity public選擇的物件
+            //playerInvetory.frogItemList.Add(WhatIsThisItem);//新增該物件到該包包的List底下
+            ////InventoryManager.CreatNewItem(WhatIsThisItem);//在IventoryManager的class底下新增一個物件，為當前物件unity public選擇的物件
+            for (int i = 0; i < playerInvetory.frogItemList.Count; i++)
+            {
+                if(playerInvetory.frogItemList[i] == null)
+                {
+                    playerInvetory.frogItemList[i] = WhatIsThisItem;
+                    break;
+                }
+            }
         }
         else //如果上面沒有執行，則執行下方動作
         {
